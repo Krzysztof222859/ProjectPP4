@@ -52,15 +52,24 @@ public class CreditCardTest {
     }
 
     @Test
-    void checkDoublesAndFloatss() {
-        double x1 = 0.01;
-        double x2 = 0.03;
-        double xresult = x2-x1;
+    void itDenyToAssignLimitTwice() {
+        CreditCard card = new CreditCard("1234-4567");
+        card.assignCredit(BigDecimal.valueOf(1000));
 
-        float y1 = 0.01f;
-        float y2 = 0.03f;
-        float yresult = y2-y1;
+        assertThrows(
+                CreditAssignedTwiceException.class,
+                () -> card.assignCredit(BigDecimal.valueOf(1100))
+        );
+    }
 
-
+    @Test
+    void itAllowWithdraw() {
+        //Arrange
+        CreditCard card = new CreditCard("1234-4567");
+        card.assignCredit(BigDecimal.valueOf(1000));
+        //Act
+        card.withdraw(BigDecimal.valueOf(100));
+        //Assert
+        assertEquals(BigDecimal.valueOf(900), card.getBalance());
     }
 }
